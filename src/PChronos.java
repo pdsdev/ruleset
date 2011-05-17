@@ -1,10 +1,19 @@
-package ruleset.plugin;
+package pds.ruleset.plugin;
 
-import pds.ruleset.*;
-import pds.label.*;
-import pds.util.*;
-import java.util.*;
-import java.io.*;
+// import igpp.ruleset.*;
+import igpp.ruleset.Action;
+import igpp.ruleset.Ruleset;
+
+// import igpp.util.*;
+import igpp.util.Option;
+
+// import java.util.*;
+import java.util.ArrayList;
+
+// import java.io.*;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 
 /**
  *			PChronos.java August 5, 2003
@@ -36,16 +45,16 @@ import java.io.*;
 public class PChronos {
 
 	public static void main(String args[]) {
-		String chronosLocation	= PPIOption.find(args, "CHRONOS",	null,		0);
-		String setupFile		= PPIOption.find(args, "SETUP",		null,		0);
-		String time 			= PPIOption.find(args, "TIME",		null,		0);
-		String param			= PPIOption.find(args, "PARAMETER",	null,		0);
-		String from				= PPIOption.find(args, "FROM",		null,		0);
-		String fromType 		= PPIOption.find(args, "FTYPE",		null,		0);
-		String to				= PPIOption.find(args, "TO",		null,		0);
-		String toType			= PPIOption.find(args, "TTYPE",		null,		0);
-		String format			= PPIOption.find(args, "FORMAT", 	null,		0);
-		String noLabel			= PPIOption.find(args, "NO_LABEL",	"true",		0);
+		String chronosLocation	= Option.find(args, "CHRONOS",	null,		0);
+		String setupFile		= Option.find(args, "SETUP",		null,		0);
+		String time 			= Option.find(args, "TIME",		null,		0);
+		String param			= Option.find(args, "PARAMETER",	null,		0);
+		String from				= Option.find(args, "FROM",		null,		0);
+		String fromType 		= Option.find(args, "FTYPE",		null,		0);
+		String to				= Option.find(args, "TO",		null,		0);
+		String toType			= Option.find(args, "TTYPE",		null,		0);
+		String format			= Option.find(args, "FORMAT", 	null,		0);
+		String noLabel			= Option.find(args, "NO_LABEL",	"true",		0);
 		
 
 		if(chronosLocation == null || setupFile == null || time == null || param == null || from == null || fromType == null || to == null || toType == null) {
@@ -94,15 +103,15 @@ public class PChronos {
 ////			argArray = (String[]) argList.toArray(argArray);
 ////			process = runtime.exec(argArray);
 //		}
-		PPIRuleset.showRule(PPIAction.ASSIGN, param, output);
+		Ruleset.showRule(Action.ASSIGN, param, output);
 	}
 	
 	private static void errorMessage(String message, boolean abort) {
-		PPIRuleset.showRule(PPIAction.MESSAGE, "$RULE_SET");
-		PPIRuleset.showRule(PPIAction.MESSAGE, "\t$FILE_PATH/$FILE_NAME");
-		PPIRuleset.showRule(PPIAction.MESSAGE, "\t" + message);
+		Ruleset.showRule(Action.MESSAGE, "$RULE_SET");
+		Ruleset.showRule(Action.MESSAGE, "\t$FILE_PATH/$FILE_NAME");
+		Ruleset.showRule(Action.MESSAGE, "\t" + message);
 		if (abort) {
-			PPIRuleset.showRule(PPIAction.ABORT, "");
+			Ruleset.showRule(Action.ABORT, "");
 			System.exit(1);
 		}
 	}

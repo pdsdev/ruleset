@@ -1,10 +1,22 @@
-package ruleset.plugin;
+package pds.ruleset.plugin;
 
-import pds.ruleset.*;
-import pds.label.*;
-import pds.util.*;
-import java.util.*;
-import java.io.*;
+// import igpp.ruleset.*;
+import igpp.ruleset.Action;
+import igpp.ruleset.Ruleset;
+
+// import igpp.util.*
+import igpp.util.Option;
+import igpp.util.MultiTime;
+
+// import java.util.*;
+import java.util.ArrayList;
+
+// import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 
 /*
  * CassiniFfhScan
@@ -58,9 +70,9 @@ public class CassiniFFHScan {
 
 	public static void main(String[] args){
 
-		file		= PPIOption.find(args, "FFH_FILE",              null, 0);
-		chronosLoc	= PPIOption.find(args, "CHRONOS_LOCATION",      null, 0);
-		chronosSetup	= PPIOption.find(args, "CHRONOS_SETUP_FILE",    null, 0);
+		file		= Option.find(args, "FFH_FILE",              null, 0);
+		chronosLoc	= Option.find(args, "CHRONOS_LOCATION",      null, 0);
+		chronosSetup	= Option.find(args, "CHRONOS_SETUP_FILE",    null, 0);
 
 		if(file == null || chronosLoc == null || chronosSetup == null) {
 			errorMessage("CassiniFFHScan called incorrectly. Usage: java CassiniFFHScan FFH_FILE=$FFH_FILE CHRONOS_LOCATION=[path to chronos] CHRONOS_SETUP_FILE=[location of the chronos setup file]", true);
@@ -77,18 +89,18 @@ public class CassiniFFHScan {
 		readFfhFile(ffhFile);
 		parse();
 		// If all goes well it prints the contents to the screen.
-		PPIRuleset.showRule(PPIAction.ASSIGN, "SFTIME",         cTime		);
-		PPIRuleset.showRule(PPIAction.ASSIGN, "STIME",          startTime	);
-		PPIRuleset.showRule(PPIAction.ASSIGN, "ETIME",          stopTime	);
-		PPIRuleset.showRule(PPIAction.ASSIGN, "SSCLK",          startSclk	);
-		PPIRuleset.showRule(PPIAction.ASSIGN, "ESCLK",          stopSclk	);
-		PPIRuleset.showRule(PPIAction.ASSIGN, "NSTART",         startNative	);
-		PPIRuleset.showRule(PPIAction.ASSIGN, "NSTOP",          stopNative	);
-		PPIRuleset.showRule(PPIAction.ASSIGN, "RECS",           recs		);
-		PPIRuleset.showRule(PPIAction.ASSIGN, "COLS",           ncols		);
-		PPIRuleset.showRule(PPIAction.ASSIGN, "REC_BYTES",      recl		);
-		PPIRuleset.showRule(PPIAction.ASSIGN, "HDR_BYTES",      hdr_bytes	);
-		PPIRuleset.showRule(PPIAction.ASSIGN, "FILE_NOTE",      ffAbstract	);
+		Ruleset.showRule(Action.ASSIGN, "SFTIME",         cTime		);
+		Ruleset.showRule(Action.ASSIGN, "STIME",          startTime	);
+		Ruleset.showRule(Action.ASSIGN, "ETIME",          stopTime	);
+		Ruleset.showRule(Action.ASSIGN, "SSCLK",          startSclk	);
+		Ruleset.showRule(Action.ASSIGN, "ESCLK",          stopSclk	);
+		Ruleset.showRule(Action.ASSIGN, "NSTART",         startNative	);
+		Ruleset.showRule(Action.ASSIGN, "NSTOP",          stopNative	);
+		Ruleset.showRule(Action.ASSIGN, "RECS",           recs		);
+		Ruleset.showRule(Action.ASSIGN, "COLS",           ncols		);
+		Ruleset.showRule(Action.ASSIGN, "REC_BYTES",      recl		);
+		Ruleset.showRule(Action.ASSIGN, "HDR_BYTES",      hdr_bytes	);
+		Ruleset.showRule(Action.ASSIGN, "FILE_NOTE",      ffAbstract	);
 	}
 
 	/*
@@ -121,7 +133,7 @@ public class CassiniFFHScan {
 		String	value;
 		int		n;
 		
-		PPITime converter = new PPITime();
+		MultiTime converter = new MultiTime();
 		for(int linesIndex = 0; linesIndex < lines.size(); linesIndex++){
 			buffer = (String) lines.get(linesIndex);
 			buffer = buffer.trim();
@@ -137,7 +149,7 @@ public class CassiniFFHScan {
 			if(buffer.startsWith("CDATE")){
 				cTime = value;
 				if(converter.convert("yyyy DDD MMM dd HH:mm:ss", cTime)){
-					cTime = converter.format(PPITime.PDS);
+					cTime = converter.format(MultiTime.PDS);
 				} else {
 					errorMessage("There was a problem converting the CDATE to a PDS format. Aborting file", true);
 				}
@@ -148,7 +160,7 @@ public class CassiniFFHScan {
 					if(buffer.startsWith("FIRST TIME")) {
 						fileStartTime = value;
 						if(converter.convert("yyyy DDD MMM dd HH:mm:ss.SSS", fileStartTime) == false){ errorMessage("There was a problem converting FIRST TIME to a binary time. Aborting file.", true);}
-						binStartTime = converter.format(PPITime.BINARY);
+						binStartTime = converter.format(MultiTime.BINARY);
 						String[] parts = binStartTime.split("\\.");
 						int decimalPart = 0;
 						int nonDecimalPart = 0;
@@ -171,12 +183,12 @@ public class CassiniFFHScan {
 						startTime = convertToScet(startSclk).trim();
 						
 						if(converter.convert("yyyy-MM-dd HH:mm:ss.SSS", startTime) == false){ errorMessage("There was a problem converting FIRST TIME to a PDS time. Aborting file.", true);}
-						startTime = converter.format(PPITime.PDS);
+						startTime = converter.format(MultiTime.PDS);
 
 					} else if(buffer.startsWith("LAST TIME")){
 						fileStopTime = value;
 						if(converter.convert("yyyy DDD MMM dd HH:mm:ss.SSS", fileStopTime) == false){ errorMessage("There was a problem converting LAST TIME to a binary time. Aborting file.", true);}
-						binStopTime = converter.format(PPITime.BINARY);
+						binStopTime = converter.format(MultiTime.BINARY);
 						String[] parts = binStopTime.split("\\.");
 						int decimalPart = 0;
 						int nonDecimalPart = 0;
@@ -198,7 +210,7 @@ public class CassiniFFHScan {
 						stopSclk = "1/" + new Integer(nonDecimalPart).toString() + ":" + decpt;
 						stopTime = convertToScet(stopSclk).trim();
 						if(converter.convert("yyyy-MM-dd HH:mm:ss.SSS", stopTime) == false){ errorMessage("There was a problem converting LAST TIME to a PDS time. Aborting file.", true);}
-						stopTime = converter.format(PPITime.PDS);
+						stopTime = converter.format(MultiTime.PDS);
 
 					} else if(!buffer.startsWith("OWNER")){
 						ffAbstract += buffer + "\n";
@@ -263,11 +275,11 @@ public class CassiniFFHScan {
 	}
 
 	private static void errorMessage(String message, boolean abort) {
-		PPIRuleset.showRule(PPIAction.MESSAGE, "$RULE_SET");
-		PPIRuleset.showRule(PPIAction.MESSAGE, "\t$FILE_PATH/$FILE_NAME");
-		PPIRuleset.showRule(PPIAction.MESSAGE, "\t" + message);
+		Ruleset.showRule(Action.MESSAGE, "$RULE_SET");
+		Ruleset.showRule(Action.MESSAGE, "\t$FILE_PATH/$FILE_NAME");
+		Ruleset.showRule(Action.MESSAGE, "\t" + message);
 		if (abort) {
-			PPIRuleset.showRule(PPIAction.ABORT, "");
+			Ruleset.showRule(Action.ABORT, "");
 			System.exit(1);
 		}
 	}

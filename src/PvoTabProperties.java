@@ -1,9 +1,17 @@
-package ruleset.plugin;
+package pds.ruleset.plugin;
 
-import pds.ruleset.*;
-import pds.util.*;
-import java.util.*;
-import java.io.*;
+// import igpp.ruleset.*;
+import igpp.ruleset.Action;
+import igpp.ruleset.Ruleset;
+
+// import igpp.util.*;
+import igpp.util.Option;
+
+// import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.BufferedReader;
+
 import java.sql.Date;
 import java.sql.Time;
 
@@ -49,8 +57,8 @@ import java.sql.Time;
  		int skip       = 0;
  		
  		//sets all the values to the appropriate things from the command line arguments
- 		String tabStr	 = PPIOption.find(args, "TABLE",      null, 0);
- 		String skipStr   = PPIOption.find(args, "SKIP_ROWS",  "0",  0);
+ 		String tabStr	 = Option.find(args, "TABLE",      null, 0);
+ 		String skipStr   = Option.find(args, "SKIP_ROWS",  "0",  0);
  		
  		//This is error checking to see if all the values have been passed.
  		if(tabStr == null) {
@@ -93,11 +101,11 @@ import java.sql.Time;
  		}
  		
  		//Prints them to STDOUT.
- 		PPIRuleset.showRule(PPIAction.ASSIGN, "STIME", startTime);
- 		PPIRuleset.showRule(PPIAction.ASSIGN, "ETIME", stopTime);
- 		PPIRuleset.showRule(PPIAction.ASSIGN, "REC_BYTES", RECL);
- 		PPIRuleset.showRule(PPIAction.ASSIGN, "RECS", RECS);
- 		PPIRuleset.showRule(PPIAction.ASSIGN, "CTIME", creationDate);
+ 		Ruleset.showRule(Action.ASSIGN, "STIME", startTime);
+ 		Ruleset.showRule(Action.ASSIGN, "ETIME", stopTime);
+ 		Ruleset.showRule(Action.ASSIGN, "REC_BYTES", RECL);
+ 		Ruleset.showRule(Action.ASSIGN, "RECS", RECS);
+ 		Ruleset.showRule(Action.ASSIGN, "CTIME", creationDate);
  		
  	}
  	
@@ -107,11 +115,11 @@ import java.sql.Time;
  	 a message and continues.
  	*/
  	private static void errorMessage(String message, boolean abort) {
-		PPIRuleset.showRule(PPIAction.MESSAGE, "$RULE_SET");
-		PPIRuleset.showRule(PPIAction.MESSAGE, "\t$FILE_PATH/$FILE_NAME");
-		PPIRuleset.showRule(PPIAction.MESSAGE, "\t" + message);
+		Ruleset.showRule(Action.MESSAGE, "$RULE_SET");
+		Ruleset.showRule(Action.MESSAGE, "\t$FILE_PATH/$FILE_NAME");
+		Ruleset.showRule(Action.MESSAGE, "\t" + message);
 		if (abort) {
-			PPIRuleset.showRule(PPIAction.ABORT, "");
+			Ruleset.showRule(Action.ABORT, "");
 			System.exit(1);
 		}
 	}
