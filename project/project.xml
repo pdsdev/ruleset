@@ -5,8 +5,8 @@
 -->
 <project name="project-config" basedir="." default="...">
     <property name="version"        value="1.0.0"/>
-    <property name="package.title"  value="PDS Tools"/>
-    <property name="package.name"   value="pds-tools"/>
+    <property name="package.title"  value="PDS Ruleset"/>
+    <property name="package.name"   value="pds-ruleset"/>
     <property name="package.vendor" value="UCLA/IGPP"/>
     <property name="copyright"    value="Copyright &#169; 2008-2009 Regents University of California. All Rights Reserved."/>    
     <property name="release.user"  value="tking"/>
