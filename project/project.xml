@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
    Properties specific to a project.
    This file is imported by the general purpose buildfile. 
    See "build.xml" for how each property influences the build.
 -->
-<project name="project-config" basedir="." default="...">
+<project name="project-config" basedir="." default="config">
     <property name="version"        value="1.0.0"/>
     <property name="package.title"  value="PDS Ruleset"/>
     <property name="package.name"   value="pds-ruleset"/>
@@ -16,4 +17,7 @@
     <property name="release.jar"   value="/projects/jar" />
     <property name="release.dist"   value="/projects/dist/pds" />
     <property name="main-class"   value="pds.tools.HelloWorld"/>
+	
+	<target name="config">
+	</target>
 </project>
